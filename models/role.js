@@ -1,5 +1,3 @@
-// models/role.js
-
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('./index');
 
@@ -15,8 +13,8 @@ Role.init({
     description: DataTypes.TEXT,
 }, {
     sequelize,
-    modelName: 'role',
-    tableName: 'roles',
+    modelName: 'role', // Nama model disesuaikan dengan konvensi Sequelize
+    tableName: 'roles', // Nama tabel disesuaikan dengan konvensi Sequelize
 });
 
 module.exports = Role;

@@ -1,8 +1,6 @@
-// models/user.js
-
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('./index');
-const Role = require('./role');
+const Role = require('./role'); // Import model Role
 
 class User extends Model {}
 
@@ -18,7 +16,7 @@ User.init({
     role_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: Role,
+            model: Role, // Menggunakan model Role sebagai model yang dirujuk
             key: 'id',
         },
     },
@@ -30,8 +28,8 @@ User.init({
     updated_at: DataTypes.DATE,
 }, {
     sequelize,
-    modelName: 'user',
-    tableName: 'users',
+    modelName: 'User', // Nama model disesuaikan dengan konvensi Sequelize
+    tableName: 'users', // Nama tabel disesuaikan dengan konvensi Sequelize
 });
 
 User.belongsTo(Role, { foreignKey: 'role_id' });
