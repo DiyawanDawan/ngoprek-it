@@ -1,191 +1,14 @@
-"use strict";
+'use strict';
 
-const {nanoid} = require("nanoid");
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    // Tambah tabel gol_darah
-    await queryInterface.createTable("gol_darah", {
-      id_gol_darah: {
-        type: Sequelize.STRING,
-        primaryKey: true,
-        allowNull: false,
-      },
-      gol_darah: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-          isIn: [["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"]],
-        },
-      },
-    });
-
-    // Tambah tabel user
-    await queryInterface.createTable("user", {
-      id_user: {
-        type: Sequelize.STRING,
-        primaryKey: true,
-        allowNull: false,
-      },
-      id_gol_darah: {
-        type: Sequelize.STRING,
-        references: {
-          model: "gol_darah",
-          key: "id_gol_darah",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
-      nama: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      no_hp: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      jenis_kelamin: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-          isIn: [["Laki-laki", "Perempuan"]],
-        },
-      },
-      tanggal_lahir: {
-        type: Sequelize.DATEONLY,
-        allowNull: false,
-      },
-      alamat: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      sts_volunteer: {
-        type: Sequelize.TINYINT,
-        allowNull: false,
-      },
-    });
-
-    // Tambah tabel lokasi_pmi
-    await queryInterface.createTable("lokasi_pmi", {
-      id_lokasi_pmi: {
-        type: Sequelize.STRING,
-        primaryKey: true,
-        allowNull: false,
-      },
-      nama: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      no_telpon: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      alamat: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      latitude: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      longitude: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      logo: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-    });
-
-    // Tambah tabel jadwal
-    await queryInterface.createTable("jadwal", {
-      id_jadwal: {
-        type: Sequelize.STRING,
-        primaryKey: true,
-        allowNull: false,
-      },
-      id_lokasi_pmi: {
-        type: Sequelize.STRING,
-        references: {
-          model: "lokasi_pmi",
-          key: "id_lokasi_pmi",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
-      lokasi_pendonoran: {
-        type: Sequelize.STRING,
-      },
-      tanggal_donor: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      jadwal_jam_mulai: {
-        type: Sequelize.TIME,
-        allowNull: false,
-      },
-      jadwal_jam_selesai: {
-        type: Sequelize.TIME,
-        allowNull: false,
-      },
-    });
-
-    // Tambah tabel bank_darah
-    await queryInterface.createTable("bank_darah", {
-      id_bank_darah: {
-        type: Sequelize.STRING,
-        primaryKey: true,
-        allowNull: false,
-      },
-      id_lokasi_pmi: {
-        type: Sequelize.STRING,
-        references: {
-          model: "lokasi_pmi",
-          key: "id_lokasi_pmi",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
-      id_gol_darah: {
-        type: Sequelize.STRING,
-        references: {
-          model: "gol_darah",
-          key: "id_gol_darah",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
-      jumlah_kantong_darah: {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('users', {
+      id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-    });
-
-    // Tambah tabel admin
-    await queryInterface.createTable("admin", {
-      id_admin: {
-        type: Sequelize.STRING,
         primaryKey: true,
-        allowNull: false,
+        autoIncrement: true,
       },
-      nama: {
+      username: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -198,156 +21,427 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-    });
-
-    // Tambah tabel tra_donor
-    await queryInterface.createTable("tra_donor", {
-      id_tra_donor: {
+      role_id: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
         allowNull: false,
-      },
-      id_user: {
-        type: Sequelize.STRING,
         references: {
-          model: "user",
-          key: "id_user",
+          model: 'roles',
+          key: 'id',
         },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
-      id_gol_darah: {
+      avatar: {
         type: Sequelize.STRING,
-        references: {
-          model: "gol_darah",
-          key: "id_gol_darah",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
       },
-      id_lokasi_pmi: {
-        type: Sequelize.STRING,
-        references: {
-          model: "lokasi_pmi",
-          key: "id_lokasi_pmi",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
-      id_jadwal: {
-        type: Sequelize.STRING,
-        references: {
-          model: "jadwal",
-          key: "id_jadwal",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
-      tanggal_daftar: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-        allowNull: false,
-      },
-      status: {
-        type: Sequelize.TINYINT,
-        allowNull: false,
-      },
-    });
-
-    // Tambah tabel tra_req_darah
-    await queryInterface.createTable("tra_req_darah", {
-      id_tra_req_darah: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false,
-      },
-      id_user_req: {
-        type: Sequelize.STRING,
-        references: {
-          model: "user",
-          key: "id_user",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
-      id_user_volunteer: {
-        type: Sequelize.STRING,
-        references: {
-          model: "user",
-          key: "id_user",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
-      id_gol_darah: {
-        type: Sequelize.STRING,
-        references: {
-          model: "gol_darah",
-          key: "id_gol_darah",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      },
-      tgl_req_darah: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      tgl_expired: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      status: {
-        type: Sequelize.TINYINT,
-        allowNull: false,
-      },
-    });
-    await queryInterface.createTable("blogs", {
-
-      id_blog: {
-        type: Sequelize.STRING,
-            primaryKey: true,
-            allowNull: false,
-      },
-      judul: {
-        type: Sequelize.STRING,
-            allowNull: false,
-      },
-      konten: {
+      bio: {
         type: Sequelize.TEXT,
-            allowNull: false,
       },
-      penulis: {
+      website: {
         type: Sequelize.STRING,
-            allowNull: false,
       },
-      tanggal_publikasi: {
-        type: Sequelize.DATE,
-            allowNull: false,
+      is_private: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
-      createdAt: {
+      created_at: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    });
+    await queryInterface.createTable('bookmarks', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      user_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      post_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'posts',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    });
+    await queryInterface.createTable('categories', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: {
+        type: Sequelize.STRING,
         allowNull: false,
-      }
-    })
+      },
+      description: {
+        type: Sequelize.TEXT,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    });
+    await queryInterface.createTable('comments', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      post_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'posts', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      parent_comment_id: {
+        type: Sequelize.INTEGER,
+      },
+      content: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
+      is_approved: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    });
+    await queryInterface.createTable('likes', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      post_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'posts', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    });
+    await queryInterface.createTable('populars', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      post_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'posts', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      views: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      likes: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+    });
+    await queryInterface.createTable('posts', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      category_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'categories', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      title: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      slug: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      content: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
+      image: Sequelize.STRING,
+      published_at: Sequelize.DATE,
+      is_featured: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      is_draft: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      views: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      likes: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+      },
+    });
+    await queryInterface.createTable('post_categories', {
+      post_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        references: {
+          model: 'posts', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      category_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        references: {
+          model: 'categories', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+    });
+    await queryInterface.createTable('post_tags', {
+      post_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        references: {
+          model: 'posts', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      tag_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        references: {
+          model: 'tags', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+    });
+    await queryInterface.createTable('roles', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    });
+    await queryInterface.createTable('subscribers', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    });
+    await queryInterface.createTable('tags', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      slug: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+      },
+    });
+    await queryInterface.createTable('views', {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      post_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'posts', // Nama tabel yang mereferensi
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    });
   },
 
-
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("gol_darah");
-    await queryInterface.dropTable("user");
-    await queryInterface.dropTable("lokasi_pmi");
-    await queryInterface.dropTable("jadwal");
-    await queryInterface.dropTable("bank_darah");
-    await queryInterface.dropTable("admin");
-    await queryInterface.dropTable("tra_donor");
-    await queryInterface.dropTable("tra_req_darah");
-  },
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('users');
+  await queryInterface.dropTable('bookmarks');
+    await queryInterface.dropTable('categories');
+    await queryInterface.dropTable('comments');
+    await queryInterface.dropTable('likes');
+    await queryInterface.dropTable('populars');
+    await queryInterface.dropTable('posts');
+    await queryInterface.dropTable('post_categories');
+    await queryInterface.dropTable('roles');
+    await queryInterface.dropTable('subscribers');
+    await queryInterface.dropTable('tags');
+    await queryInterface.dropTable('views');
+  }
 };
