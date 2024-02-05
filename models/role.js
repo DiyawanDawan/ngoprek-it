@@ -1,4 +1,6 @@
+// Models. role.js
 const { DataTypes, Model } = require('sequelize');
+
 const sequelize = require('./index');
 
 class Role extends Model {}
@@ -13,7 +15,7 @@ Role.init({
     description: DataTypes.TEXT,
 }, {
     sequelize,
-    modelName: 'role', // Nama model disesuaikan dengan konvensi Sequelize
+    modelName: 'Role', // Nama model disesuaikan dengan konvensi Sequelize
     tableName: 'roles', // Nama tabel disesuaikan dengan konvensi Sequelize
 });
 

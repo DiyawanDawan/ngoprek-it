@@ -1,4 +1,4 @@
-# api-hemolife
+# Blogs Api
 
 Kode Default Kolabuarsi bersama Tim Capstone Project
 

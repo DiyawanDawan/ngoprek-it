@@ -1,3 +1,4 @@
+// Models user.js
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('./index');
 const Role = require('./role'); // Import model Role

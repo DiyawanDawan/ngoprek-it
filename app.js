@@ -26,15 +26,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/v1/auth/login", loginRouter);
-app.use("/v1/auth/register", registerRouter);
-app.use("/v1/user/userProfile", profileRouter);
+app.use("/v1/users", usersRouter);
 app.use("/v1/admin", adminRouter);
-// app.use("/v1/admin/", addPostJadwalPMI);
-app.use("/v1/user/jadwal", jadwalRouter);
-app.use("/v1/blogs", blogsRouter)
-app.use("/v1/user/volunteer", volunteerRouter);
-app.use("/v1/user/dashboardUser", dashboardRouter);
+
 
 module.exports = app;
