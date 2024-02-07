@@ -1,40 +1,32 @@
-// models/like.js
-
-const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./index');
-const User = require('./user');
-const Post = require('./post');
-
-class Like extends Model {}
-
-Like.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: User,
-            key: 'id',
+module.exports = (sequelize, DataTypes) => {
+    const Like = sequelize.define('Like', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
         },
-    },
-    post_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Post,
-            key: 'id',
+        user_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false, // Menambahkan validasi agar kolom user_id tidak boleh kosong
+            references: {
+                model: 'User',
+                key: 'id',
+            },
         },
-    },
-    created_at: DataTypes.DATE,
-}, {
-    sequelize,
-    modelName: 'like',
-    tableName: 'likes',
-});
+        post_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false, // Menambahkan validasi agar kolom post_id tidak boleh kosong
+            references: {
+                model: 'Post',
+                key: 'id',
+            },
+        },
+        created_at: DataTypes.DATE,
+    }, {
+        sequelize,
+        modelName: 'Like',
+        tableName: 'likes',
+    });
 
-Like.belongsTo(User, { foreignKey: 'user_id' });
-Like.belongsTo(Post, { foreignKey: 'post_id' });
-
-module.exports = Like;
+    return Like;
+};

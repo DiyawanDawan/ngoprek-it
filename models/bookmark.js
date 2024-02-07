@@ -1,40 +1,38 @@
-// models/bookmark.js
-
-const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./index');
-const User = require('./user');
-const Post = require('./post');
-
-class Bookmark extends Model {}
-
-Bookmark.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: User,
-            key: 'id',
+module.exports = (sequelize, DataTypes) => {
+    const Bookmark = sequelize.define('Bookmark', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
         },
-    },
-    post_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Post,
-            key: 'id',
+        user_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'User',
+                key: 'id',
+            },
         },
-    },
-    created_at: DataTypes.DATE,
-}, {
-    sequelize,
-    modelName: 'bookmark',
-    tableName: 'bookmarks',
-});
+        post_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Post',
+                key: 'id',
+            },
+        },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+        },
+    }, {
+        tableName: 'bookmarks',
+    });
 
-Bookmark.belongsTo(User, { foreignKey: 'user_id' });
-Bookmark.belongsTo(Post, { foreignKey: 'post_id' });
+    Bookmark.associate = function(models) {
+        Bookmark.belongsTo(models.User, { foreignKey: 'user_id' });
+        Bookmark.belongsTo(models.Post, { foreignKey: 'post_id' });
+    };
 
-module.exports = Bookmark;
+    return Bookmark;
+};

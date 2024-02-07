@@ -1,31 +1,27 @@
-// models/subscriber.js
-
-const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./index');
-const User = require('./user');
-
-class Subscriber extends Model {}
-
-Subscriber.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: User,
-            key: 'id',
+module.exports = (sequelize, DataTypes) => {
+    const Subscriber = sequelize.define('Subscriber', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
         },
-    },
-    created_at: DataTypes.DATE,
-}, {
-    sequelize,
-    modelName: 'subscriber',
-    tableName: 'subscribers',
-});
+        user_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'User', // Merujuk ke model 'User' menggunakan string
+                key: 'id',
+            },
+        },
+        created_at: DataTypes.DATE,
+    }, {
+        modelName: 'Subscriber',
+        tableName: 'subscribers',
+    });
 
-Subscriber.belongsTo(User, { foreignKey: 'user_id' });
+    Subscriber.associate = function(models) {
+        Subscriber.belongsTo(models.User, { foreignKey: 'user_id' }); // Mendefinisikan relasi di dalam fungsi associate
+    };
 
-module.exports = Subscriber;
+    return Subscriber;
+};

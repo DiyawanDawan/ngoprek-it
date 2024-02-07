@@ -1,26 +1,24 @@
-// models/category.js
+module.exports = (sequelize, DataTypes) => {
+    const Category = sequelize.define('Category', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false, // Menambahkan validasi agar kolom name tidak boleh kosong
+        },
+        description: DataTypes.TEXT,
+    }, {
+        sequelize,
+        modelName: 'Category',
+        tableName: 'categories',
+    });
 
-const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./index');
-const Post = require('./post');
-const PostCategory = require('./postCategory');
+    Category.associate = function(models) {
+        Category.belongsToMany(models.Post, { through: models.PostCategory, foreignKey: 'category_id' });
+    };
 
-class Category extends Model {}
-
-Category.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    name: DataTypes.STRING,
-    description: DataTypes.TEXT,
-}, {
-    sequelize,
-    modelName: 'category',
-    tableName: 'categories',
-});
-
-Category.belongsToMany(Post, { through: PostCategory, foreignKey: 'category_id' });
-
-module.exports = Category;
+    return Category;
+};

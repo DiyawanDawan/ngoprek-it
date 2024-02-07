@@ -7,15 +7,8 @@ const logger = require("morgan");
 const cors = require('cors');
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-const loginRouter = require("./routes/login");
-const registerRouter = require("./routes/register");
-const profileRouter = require("./routes/profile");
 const adminRouter = require("./routes/admin");
-const jadwalRouter = require("./routes/jadwal");
-const volunteerRouter = require("./routes/volunteer");
-const dashboardRouter = require("./routes/dashboard");
-const blogsRouter = require("./routes/bloges");
-// const  addPostJadwalPMI = require("./routes/addPostJawadlDonorPMI");
+
 
 const app = express();
 app.use(cors());

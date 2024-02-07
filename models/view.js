@@ -1,31 +1,32 @@
-// models/view.js
-
-const { DataTypes, Model } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('./index');
 const Post = require('./post');
 
-class View extends Model {}
-
-View.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    post_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Post,
-            key: 'id',
+module.exports = (sequelize, DataTypes) => {
+    const View = sequelize.define('View', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
         },
-    },
-    created_at: DataTypes.DATE,
-}, {
-    sequelize,
-    modelName: 'view',
-    tableName: 'views',
-});
+        post_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Post', // Ubah referensi model menjadi string 'Post'
+                key: 'id',
+            },
+        },
+        created_at: DataTypes.DATE,
+    }, {
+        sequelize,
+        modelName: 'View',
+        tableName: 'views',
+    });
 
-View.belongsTo(Post, { foreignKey: 'post_id' });
+    View.associate = function(models) {
+        View.belongsTo(models.Post, { foreignKey: 'post_id' });
+    };
 
-module.exports = View;
+    return View;
+};

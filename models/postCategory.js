@@ -1,34 +1,38 @@
-// models/postCategory.js
-
-const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./index');
-const Post = require('./post');
-const Category = require('./category');
-
-class PostCategory extends Model {}
-
-PostCategory.init({
-    post_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-            model: Post,
-            key: 'id',
+module.exports = (sequelize, DataTypes) => {
+    const PostCategory = sequelize.define('PostCategory', {
+        post_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Post',
+                key: 'id',
+            },
+            validate: {
+                notEmpty: true,
+            },
         },
-    },
-    category_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-            model: Category,
-            key: 'id',
+        category_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Category',
+                key: 'id',
+            },
+            validate: {
+                notEmpty: true,
+            },
         },
-    },
-}, {
-    sequelize,
-    modelName: 'post_category',
-    tableName: 'post_categories',
-    timestamps: false,
-});
+    }, {
+        sequelize,
+        modelName: 'PostCategory',
+        tableName: 'post_categories',
+        timestamps: false,
+    });
 
-module.exports = PostCategory;
+    PostCategory.associate = function(models) {
+        PostCategory.belongsTo(models.Post, { foreignKey: 'post_id' });
+        PostCategory.belongsTo(models.Category, { foreignKey: 'category_id' });
+    };
+
+    return PostCategory;
+};

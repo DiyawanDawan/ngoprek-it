@@ -1,32 +1,29 @@
-// models/popular.js
-
-const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./index');
-const Post = require('./post');
-
-class Popular extends Model {}
-
-Popular.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    post_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Post,
-            key: 'id',
+module.exports = (sequelize, DataTypes) => {
+    const Popular = sequelize.define('Popular', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
         },
-    },
-    views: DataTypes.INTEGER,
-    likes: DataTypes.INTEGER,
-}, {
-    sequelize,
-    modelName: 'popular',
-    tableName: 'populars',
-});
+        post_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Post', // Ubah referensi model menjadi string 'Post'
+                key: 'id',
+            },
+        },
+        views: DataTypes.INTEGER,
+        likes: DataTypes.INTEGER,
+    }, {
+        sequelize,
+        modelName: 'Popular',
+        tableName: 'populars',
+    });
 
-Popular.belongsTo(Post, { foreignKey: 'post_id' });
+    Popular.associate = function(models) {
+        Popular.belongsTo(models.Post, { foreignKey: 'post_id' });
+    };
 
-module.exports = Popular;
+    return Popular;
+};

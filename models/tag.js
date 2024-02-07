@@ -1,26 +1,26 @@
-// models/tag.js
+module.exports = (sequelize, DataTypes) => {
+    const Tag = sequelize.define('Tag', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        slug: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+    }, {
+        modelName: 'Tag',
+        tableName: 'tags',
+    });
 
-const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./index');
-const Post = require('./post');
-const PostTag = require('./postTag');
+    Tag.associate = function(models) {
+        Tag.belongsToMany(models.Post, { through: models.PostTag, foreignKey: 'tag_id' }); // Mendefinisikan relasi di dalam fungsi associate
+    };
 
-class Tag extends Model {}
-
-Tag.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    name: DataTypes.STRING,
-    slug: DataTypes.STRING,
-}, {
-    sequelize,
-    modelName: 'tag',
-    tableName: 'tags',
-});
-
-Tag.belongsToMany(Post, { through: PostTag, foreignKey: 'tag_id' });
-
-module.exports = Tag;
+    return Tag;
+};

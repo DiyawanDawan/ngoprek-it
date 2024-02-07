@@ -1,34 +1,29 @@
-// models/postTag.js
-
-const { DataTypes, Model } = require('sequelize');
-const sequelize = require('./index');
-const Post = require('./post');
-const Tag = require('./tag');
-
-class PostTag extends Model {}
-
-PostTag.init({
-    post_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-            model: Post,
-            key: 'id',
+module.exports = (sequelize, DataTypes) => {
+    const PostTag = sequelize.define('PostTag', {
+        post_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'Post',
+                key: 'id',
+            },
         },
-    },
-    tag_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-            model: Tag,
-            key: 'id',
+        tag_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'Tag',
+                key: 'id',
+            },
         },
-    },
-}, {
-    sequelize,
-    modelName: 'post_tag',
-    tableName: 'post_tags',
-    timestamps: false,
-});
+    }, {
+        modelName: 'PostTag',
+        tableName: 'post_tags',
+        timestamps: false,
+    });
 
-module.exports = PostTag;
+    PostTag.associate = function(models) {
+        PostTag.belongsTo(models.Post, { foreignKey: 'post_id' });
+        PostTag.belongsTo(models.Tag, { foreignKey: 'tag_id' });
+    };
+
+    return PostTag;
+};
